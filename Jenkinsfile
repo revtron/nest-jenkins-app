@@ -23,10 +23,12 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                  rsync -av --delete ./ $APP_DIR
+                  rsync -av ./ $APP_DIR
                   cd $APP_DIR
-                  pm2 delete $APP_NAME || true
-                  pm2 start dist/main.js --name $APP_NAME
+                  npm install
+                  npm run build
+                  pm2 delete nest-jenkins-app || true
+                  pm2 start dist/main.js --name nest-jenkins-app
                   pm2 save
                 '''
             }
